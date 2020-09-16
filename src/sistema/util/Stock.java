@@ -116,7 +116,7 @@ public class Stock {
      * registers with the same category.
      * @param category is the category (S or P).
      */
-    public static void deleteProductByCategory(char category){
+    public static void deleteProduct(char category){
         
         try {
             Connection cn = Database.connect();
