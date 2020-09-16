@@ -1,13 +1,16 @@
 package sistema.db;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * This class contains the standard methods to work with a Database, which one
  * should be defined in the DataBase class.
  *
  * @author Nicolas Matute M.Z
- * @version 1.4
+ * @version 1.5
  * @since 2020-07
  */
 public class SQLoperation {
@@ -29,8 +32,9 @@ public class SQLoperation {
             cn = Database.connect();
             st = cn.createStatement();
             st.executeUpdate("INSERT INTO " + table + " (" + fields + ") " + "VALUES (" + values + ")");
-            st.close();
-            cn.close();   
+            
+            close(st, cn);
+             
         } catch (SQLException e){
             System.err.println("Error inserting: " + e.getMessage());
         }             
@@ -54,8 +58,9 @@ public class SQLoperation {
             cn = Database.connect();
             st = cn.createStatement();
             st.executeUpdate("INSERT INTO " + table + " VALUES (" + values + ")");
-            st.close();
-            cn.close();   
+            
+            close(st, cn);
+             
         } catch (SQLException e){
             System.err.println("Error inserting: " + e.getMessage());                      
         }
@@ -78,8 +83,9 @@ public class SQLoperation {
             cn = Database.connect();
             st = cn.createStatement();
             st.executeUpdate("DELETE FROM " + table + " WHERE " + condition);
-            st.close();
-            cn.close();   
+            
+            close(st, cn);
+            
         } catch (SQLException e){
             System.err.println("Error deleting: " + e.getMessage());
         }        
@@ -105,8 +111,9 @@ public class SQLoperation {
             cn = Database.connect();
             st = cn.createStatement();
             st.executeUpdate("UPDATE " + table + " SET " + update + " WHERE " + condition);
-            st.close();
-            cn.close();   
+            
+            close(st, cn);
+               
         } catch (SQLException e){
             System.err.println("Error updating: " + e.getMessage());
         }        
@@ -129,8 +136,9 @@ public class SQLoperation {
             cn = Database.connect();
             st = cn.createStatement();
             st.executeUpdate(operation);
-            st.close();
-            cn.close();   
+            
+            close(st, cn);
+             
         } catch (SQLException e){
             System.err.println("Error in custom sql: " + e.getMessage());
         }        
@@ -148,12 +156,37 @@ public class SQLoperation {
             cn = Database.connect();
             st = cn.createStatement();
             st.executeUpdate("DELETE FROM " + table);
-            st.close();
-            cn.close();   
+            
+            close(st, cn);
+            
         } catch (SQLException e){
             System.err.println("Error in truncate: " + e.getMessage());
         }
         
+    }
+    
+    /**
+     * This method is used to close the statement and connection objects.
+     * @param st the statement obj.
+     * @param cn the connection obj.
+     * @throws SQLException 
+     */
+    public static void close(Statement st, Connection cn) throws SQLException {
+        st.close();
+        cn.close();
+    }
+    
+    /**
+     * This method is used to close the resultset, statement and the connection objects.
+     * @param cn the connection obj.
+     * @param st the statement obj.
+     * @param rs the resultset obj.
+     * @throws SQLException
+     */
+    public static void close(ResultSet rs, Statement st, Connection cn) throws SQLException {
+        rs.close();
+        st.close();
+        cn.close();
     }
 
 }

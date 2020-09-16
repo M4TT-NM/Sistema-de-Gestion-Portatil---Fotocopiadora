@@ -1,11 +1,14 @@
 package sistema.util;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import javax.swing.JOptionPane;
 import sistema.db.Database;
 import sistema.db.SQLoperation;
 
 /**
- * 
+ * This class is used to deal with stock registered in the database.
  * @author Nicolas Matute M.Z <manuelnmatute@gmail.com>
  */
 public class Stock {
@@ -24,9 +27,9 @@ public class Stock {
             ResultSet rs = st.executeQuery("SELECT * FROM Selling WHERE Name = '" + name + "'");
             
             if(!rs.next()){
-                rs.close();
-                st.close();
-                cn.close();              
+            
+                SQLoperation.close(rs,st,cn);
+                        
                 if(!(cost <= 0)){
                     SQLoperation.insert("Selling", "'" + name + "', " + cost + ", '" + category + "'");
                 } else {
@@ -35,11 +38,9 @@ public class Stock {
                 
             } else {
                 JOptionPane.showMessageDialog(null, "Este producto/servicio ya existe.\n Intente de nuevo.");
-            }
+            }            
             
-            rs.close();
-            st.close();
-            cn.close();  
+            SQLoperation.close(rs,st,cn);                       
             
         } catch (SQLException e) {
             System.err.println("Error al añadir producto. " + e.getMessage());
@@ -61,10 +62,8 @@ public class Stock {
             while(rs.next()){
                 amount += 1;
             }
-            
-            rs.close();
-            st.close();
-            cn.close();
+                        
+            SQLoperation.close(rs,st,cn);                        
             
             if(amount > 0){
                 SQLoperation.truncate("Selling");
@@ -92,19 +91,17 @@ public class Stock {
             ResultSet rs = st.executeQuery("SELECT Name FROM Selling WHERE Name = '" + name + "'");
             
             if(rs.next()){
-                rs.close();
-                st.close();
-                cn.close();                  
+            
+                SQLoperation.close(rs,st,cn);
+                                        
                 SQLoperation.delete("Selling", "Name = '" + name + "'");
                 
             } else {
                 JOptionPane.showMessageDialog(null, "Este producto/servicio no existe.\n Intente de nuevo.");
             }
-            
-            rs.close();
-            st.close();
-            cn.close();          
-            
+                        
+            SQLoperation.close(rs,st,cn);
+                                             
         } catch (SQLException e) {
             System.err.println("Error al producto/servicio. " + e.getMessage());
         }        
@@ -116,7 +113,7 @@ public class Stock {
      * registers with the same category.
      * @param category is the category (S or P).
      */
-    public static void deleteProductByCategory(char category){
+    public static void deleteProduct(char category){
         
         try {
             Connection cn = Database.connect();
@@ -124,9 +121,9 @@ public class Stock {
             ResultSet rs = st.executeQuery("SELECT * FROM Selling WHERE Category = '" + category + "'");
             
             if(rs.next()){
-                rs.close();
-                st.close();
-                cn.close();                  
+            
+                SQLoperation.close(rs,st,cn);
+                                       
                 SQLoperation.delete("Selling", "Category = '" + category + "'");
                 
             } else {
@@ -139,11 +136,9 @@ public class Stock {
                         break;
                 }
             }
-            
-            rs.close();
-            st.close();
-            cn.close();  
-            
+               
+            SQLoperation.close(rs,st,cn);
+                             
         } catch (SQLException e) {
             System.err.println("Error al borrar producto/servicio. " + e.getMessage());
         } 
@@ -165,19 +160,17 @@ public class Stock {
             ResultSet rs = st.executeQuery("SELECT Name FROM Selling WHERE Name = '" + oldName + "'");
             
             if(rs.next()){
-                rs.close();
-                st.close();
-                cn.close();                  
+            
+            SQLoperation.close(rs,st,cn);
+                                         
                 SQLoperation.update("Selling", "Name = '" + newName + "', Cost = " + cost, "Name = '" + oldName + "'");
                 
             } else {
                 JOptionPane.showMessageDialog(null, "Este producto/servicio no existe.\n Intente de nuevo.");
             }
 
-            rs.close();
-            st.close();
-            cn.close();  
-            
+            SQLoperation.close(rs,st,cn);
+                                   
         } catch (SQLException e) {
             System.err.println("Error al producto/servicio. " + e.getMessage());
         }     
@@ -196,19 +189,17 @@ public class Stock {
             ResultSet rs = st.executeQuery("SELECT Name FROM Selling WHERE Name = '" + name + "'");
             
             if(rs.next()){
-                rs.close();
-                st.close();
-                cn.close();            
+            
+                SQLoperation.close(rs,st,cn);
+                                   
                 SQLoperation.update("Selling", "Cost = " + cost, "Name = '" + name + "'");
                 
             } else {
                 JOptionPane.showMessageDialog(null, "Este producto/servicio no existe.\n Intente de nuevo.");
             }
-            
-            rs.close();
-            st.close();
-            cn.close(); 
-            
+               
+            SQLoperation.close(rs,st,cn);
+                          
         } catch (SQLException e) {
             System.err.println("Error al producto/servicio. " + e.getMessage());
         }     
@@ -227,20 +218,17 @@ public class Stock {
             ResultSet rs = st.executeQuery("SELECT Name FROM Selling WHERE Name = '" + oldName + "'");
             
             if(rs.next()){
-                rs.close();
-                st.close();
-                cn.close();        
-                
+            
+                SQLoperation.close(rs,st,cn);
+        
                 SQLoperation.update("Selling", "Name = '" + newName + "'", "Name = '" + oldName + "'");
                 
             } else {
                 JOptionPane.showMessageDialog(null, "Este producto/servicio no existe.\n Intente de nuevo.");
             }
-            
-            rs.close();
-            st.close();
-            cn.close(); 
-            
+                      
+            SQLoperation.close(rs,st,cn);
+                              
         } catch (SQLException e) {
             System.err.println("Error al producto/servicio. " + e.getMessage());
         }    
@@ -262,10 +250,7 @@ public class Stock {
                 amount += 1;
             }
             
-            rs.close();
-            st.close();
-            cn.close();
-            
+            SQLoperation.close(rs,st,cn);      
             
         } catch (SQLException e) {            
             System.err.println("Error counting stock: " + e.getMessage());
@@ -289,13 +274,11 @@ public class Stock {
             
             while(rs.next()){
                 amount += 1;
-            }
+            }           
             
-            rs.close();
-            st.close();
-            cn.close();
-            
-            
+            SQLoperation.close(rs,st,cn);
+                        
+  
         } catch (SQLException e) {            
             System.err.println("Error counting stock: " + e.getMessage());
         }
@@ -322,10 +305,8 @@ public class Stock {
                 System.out.println("Este producto no existe.");
             }
             
-            rs.close();
-            st.close();
-            cn.close();
-        
+            SQLoperation.close(rs,st,cn);
+                            
         } catch (SQLException e) {
             System.err.println("Error searching price: " + e.getMessage());
         }
@@ -333,41 +314,4 @@ public class Stock {
         return price;
     }
     
-    /**
-     * This method shows with JOptionPanes the product/service information.
-     * @param name is the name of the product/service.
-     */
-    public static void productInfo(String name){
-     
-        String product_name, product_cost, product_type;
-        
-        try {
-            Connection cn = Database.connect();
-            Statement st = cn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM Selling WHERE Name = '" + name + "'");
-            
-            if(rs.next()){
-                
-                product_cost = rs.getString("Cost");
-                product_name = rs.getString("Name");
-                product_type = (rs.getString("Category").equals('S')) ? "Servicio" : "Producto";
-                
-                JOptionPane.showMessageDialog(null, "Nombre: " + product_name
-                                               + "\n Precio: " + product_cost
-                                               + "\n Tipo: " + product_type);
-            } else {
-                System.out.println("Este producto no existe.");
-            }
-
-            rs.close();
-            st.close();
-            cn.close();            
-            
-        } catch (SQLException e) {
-            System.err.println("Error searching information of: " + name + "\n" + "Error: " + e.getMessage());
-        }
-        
-    }
-    
-   
 }
