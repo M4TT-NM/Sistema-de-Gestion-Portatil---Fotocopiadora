@@ -8,7 +8,7 @@ import java.sql.*;
  */
 public class Database {
     
-    static Connection cn = null;
+    private static Connection cn = null;
     
     public static Connection connect(){
                 
