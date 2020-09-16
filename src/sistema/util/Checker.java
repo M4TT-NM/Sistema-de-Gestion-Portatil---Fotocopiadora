@@ -21,7 +21,7 @@ public class Checker {
      * This method checks the key wrote by user.
      * If it is the first time the user starts the system, it is going to solicitate the KEY.
      * If the key is wrong, the client won't be able to use the system.
-     * @return 
+     * @return true if key is right, else false.
      */
     public boolean keyCheck(){
         boolean response = false;
@@ -61,6 +61,9 @@ public class Checker {
         return response;
     }
     
+    /**
+     * This method is used to set the folder where reports will save.
+     */
     public void setReportFolder(){
         
         try {
@@ -90,6 +93,10 @@ public class Checker {
         
     }
     
+    /**
+     * This method returns the folder path of reports.
+     * @return the folder path.
+     */
     public String getReportFolder(){
         String folder_path = null;
         
