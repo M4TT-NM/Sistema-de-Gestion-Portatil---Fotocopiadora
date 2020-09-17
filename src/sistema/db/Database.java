@@ -15,7 +15,7 @@ public class Database {
         try {
             Class.forName("org.sqlite.JDBC");
             
-            cn = DriverManager.getConnection("jdbc:sqlite:central.db");
+            cn = DriverManager.getConnection("jdbc:sqlite:NoBorrar/central.db");
             
         } catch (ClassNotFoundException e) {
             System.err.println("Error in class: " + e.getMessage());
