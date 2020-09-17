@@ -13,7 +13,7 @@ import java.sql.Statement;
 import javax.swing.JOptionPane;
 
 /**
- * This class is in charge of checking important information for the system.
+ * This class is in charge of checking important information for the system. 
  * @author Nicolas Matute M.Z <manuelnmatute@gmail.com>
  */
 public class Checker {
@@ -81,13 +81,16 @@ public class Checker {
                                               
                 String folder_path = JOptionPane.showInputDialog("Ingrese la ruta a la carpeta:");
                 
-                if(folder_path.contains("/")){               
+                if(folder_path != null || !folder_path.equals("")){
                     SQLoperation.update("PrivateData", "Data = '" + folder_path + "'", "Name = 'ReportDestination'");
                     JOptionPane.showMessageDialog(null, "Carpeta actualizada.");
                 } else {
-                    JOptionPane.showMessageDialog(null, "Escriba una ruta valida.");
-                }                
+                    JOptionPane.showMessageDialog(null, "No ha incluido la carpeta para \n los reportes.");
+                }
+              
             }
+            
+            SQLoperation.close(rs,st,cn);
             
         } catch (SQLException e) {
             System.err.println("Error setting reports folder: " + e.getMessage());
@@ -122,10 +125,25 @@ public class Checker {
      */
     public void setBusinessName(){
 
-        String businessName = JOptionPane.showInputDialog("Ingrese el nombre de su negocio:");
+        String businessName;
 
-        SQLoperation.update("PrivateData", "Data = '" + businessName + "'", "Name = 'BusinessName'");
-               
+        
+        try {
+            Connection cn = Database.connect();
+            Statement st = cn.createStatement();
+            ResultSet rs = st.executeQuery("SELECT Data FROM PrivateData WHERE Name = 'BusinessName'");
+            
+            if(rs.getString("Data") == null){
+                SQLoperation.close(rs,st,cn);
+                businessName = JOptionPane.showInputDialog("Ingrese el nombre de su negocio:");
+                SQLoperation.update("PrivateData", "Data = '" + businessName + "'", "Name = 'BusinessName'");
+            }
+            
+            SQLoperation.close(rs,st,cn);
+            
+        } catch (SQLException e) {
+            System.err.println("Error getting business name: " + e.getMessage());
+        }               
     }
     
     /**
