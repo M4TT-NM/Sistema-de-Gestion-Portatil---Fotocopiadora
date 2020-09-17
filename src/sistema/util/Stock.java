@@ -51,7 +51,7 @@ public class Stock {
     /**
      * This method cleans the whole stock in the database.
      */
-    public static void cleanStock(){
+    public static void clean(){
         int amount = 0;
         
         try {
