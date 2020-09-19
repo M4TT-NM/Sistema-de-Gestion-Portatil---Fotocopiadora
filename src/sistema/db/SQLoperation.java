@@ -26,14 +26,14 @@ public class SQLoperation {
      * @param values are the values you want to add.
      */
     public static void insert(String table, String fields, String values){
-        Connection cn;
-        Statement st;
+        Connection con;
+        Statement sta;
         try{ 
-            cn = Database.connect();
-            st = cn.createStatement();
-            st.executeUpdate("INSERT INTO " + table + " (" + fields + ") " + "VALUES (" + values + ")");
+            con = Database.connect();
+            sta = con.createStatement();
+            sta.executeUpdate("INSERT INTO " + table + " (" + fields + ") " + "VALUES (" + values + ")");
             
-            close(st, cn);
+            close(sta, con);
              
         } catch (SQLException e){
             System.err.println("Error inserting: " + e.getMessage());
@@ -52,14 +52,14 @@ public class SQLoperation {
      */
     public static void insert(String table, String values){
 
-        Connection cn;
-        Statement st;
+        Connection con;
+        Statement sta;
         try{ 
-            cn = Database.connect();
-            st = cn.createStatement();
-            st.executeUpdate("INSERT INTO " + table + " VALUES (" + values + ")");
+            con = Database.connect();
+            sta = con.createStatement();
+            sta.executeUpdate("INSERT INTO " + table + " VALUES (" + values + ")");
             
-            close(st, cn);
+            close(sta, con);
              
         } catch (SQLException e){
             System.err.println("Error inserting: " + e.getMessage());                      
@@ -77,14 +77,14 @@ public class SQLoperation {
      */
     public static void delete(String table, String condition){
 
-        Connection cn;
-        Statement st;
+        Connection con;
+        Statement sta;
         try{ 
-            cn = Database.connect();
-            st = cn.createStatement();
-            st.executeUpdate("DELETE FROM " + table + " WHERE " + condition);
+            con = Database.connect();
+            sta = con.createStatement();
+            sta.executeUpdate("DELETE FROM " + table + " WHERE " + condition);
             
-            close(st, cn);
+            close(sta, con);
             
         } catch (SQLException e){
             System.err.println("Error deleting: " + e.getMessage());
@@ -105,14 +105,14 @@ public class SQLoperation {
      */
     public static void update(String table, String update, String condition){
 
-        Connection cn;
-        Statement st;
+        Connection con;
+        Statement sta;
         try{ 
-            cn = Database.connect();
-            st = cn.createStatement();
-            st.executeUpdate("UPDATE " + table + " SET " + update + " WHERE " + condition);
+            con = Database.connect();
+            sta = con.createStatement();
+            sta.executeUpdate("UPDATE " + table + " SET " + update + " WHERE " + condition);
             
-            close(st, cn);
+            close(sta, con);
                
         } catch (SQLException e){
             System.err.println("Error updating: " + e.getMessage());
@@ -130,14 +130,14 @@ public class SQLoperation {
      * @param operation is the custom update.
      */
     public static void custom(String operation){
-        Connection cn;
-        Statement st;
+        Connection con;
+        Statement sta;
         try{ 
-            cn = Database.connect();
-            st = cn.createStatement();
-            st.executeUpdate(operation);
+            con = Database.connect();
+            sta = con.createStatement();
+            sta.executeUpdate(operation);
             
-            close(st, cn);
+            close(sta, con);
              
         } catch (SQLException e){
             System.err.println("Error in custom sql: " + e.getMessage());
@@ -150,14 +150,14 @@ public class SQLoperation {
      */
     
     public static void truncate(String table){
-        Connection cn;
-        Statement st;
+        Connection con;
+        Statement sta;
         try{ 
-            cn = Database.connect();
-            st = cn.createStatement();
-            st.executeUpdate("DELETE FROM " + table);
+            con = Database.connect();
+            sta = con.createStatement();
+            sta.executeUpdate("DELETE FROM " + table);
             
-            close(st, cn);
+            close(sta, con);
             
         } catch (SQLException e){
             System.err.println("Error in truncate: " + e.getMessage());
