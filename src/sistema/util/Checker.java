@@ -88,10 +88,10 @@ public class Checker {
                     JOptionPane.showMessageDialog(null, "No ha incluido la carpeta para \n los reportes.");
                 }
               
+            } else {
+                SQLoperation.close(rs,st,cn);                
             }
-            
-            SQLoperation.close(rs,st,cn);
-            
+             
         } catch (SQLException e) {
             System.err.println("Error setting reports folder: " + e.getMessage());
         }
@@ -137,12 +137,14 @@ public class Checker {
                 SQLoperation.close(rs,st,cn);
                 businessName = JOptionPane.showInputDialog("Ingrese el nombre de su negocio:");
                 SQLoperation.update("PrivateData", "Data = '" + businessName + "'", "Name = 'BusinessName'");
+            } else {
+                SQLoperation.close(rs,st,cn);                
             }
             
-            SQLoperation.close(rs,st,cn);
+
             
         } catch (SQLException e) {
-            System.err.println("Error getting business name: " + e.getMessage());
+            System.err.println("Error setting business name: " + e.getMessage());
         }               
     }
     
@@ -151,23 +153,22 @@ public class Checker {
      * @return the business name. In case of none, returns null.
      */
     public String getBusinessName(){
-        String businessName = null;
+        String businessName = "";
         
         try {
             Connection cn = Database.connect();
             Statement st = cn.createStatement();
             ResultSet rs = st.executeQuery("SELECT Data FROM PrivateData WHERE Name = 'BusinessName'");
             
-            if(rs.getString("Data") != null){
                 businessName = rs.getString("Data");
-            }
-            
+                
             SQLoperation.close(rs,st,cn);
+            
+            return businessName;
             
         } catch (SQLException e) {
             System.err.println("Error getting business name: " + e.getMessage());
         }
-        
         return businessName;
     }
        

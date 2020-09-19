@@ -79,16 +79,42 @@ public class Sell {
         
 
         String minute = (t.getMinuteOfHour() < 10) ? "0" + Integer.toString(t.getMinuteOfHour()) : Integer.toString(t.getMinuteOfHour());
-        int second = t.getSecondOfMinute();
+        String second = (t.getSecondOfMinute() < 10) ? "0" + Integer.toString(t.getSecondOfMinute()) : Integer.toString(t.getSecondOfMinute());
         double total = amount * value;
         
         if(amount > 0 && value > 0){
             SQLoperation.insert("ReportData", "'" + hour + ":" + minute + ":" + second + " " + time + "', '" + concept + "'," + amount + "," + value + "," + total);
+            SQLoperation.insert("Temp", "'" + hour + ":" + minute + ":" + second + " " + time + "', '" + concept + "'," + amount + "," + value + "," + total);
         } else {
             JOptionPane.showMessageDialog(null, "No ingrese numeros menores o igual a cero.\n Intente de nuevo.");
         }
         
     }
+    
+    /**
+     * This method shows the total sold of the a temp transaction. Then cleans.
+     */
+    public static void getTempSold(){
+        double total = 0;
+        try {
+            Connection cn = Database.connect();
+            Statement st = cn.createStatement();
+            ResultSet rs = st.executeQuery("SELECT Total FROM Temp");
+            
+            while(rs.next()){
+                total += rs.getDouble("Total");
+            }
+            
+            SQLoperation.close(rs, st, cn);
+            
+        } catch (SQLException e) {
+            System.err.println("Error getting total: " + e);
+        }
+        SQLoperation.truncate("Temp");
+        JOptionPane.showMessageDialog(null, "El total es: " + total);
+    }    
+    
+    
     
     /**
      * This method calculates the total of $ per day.

@@ -26,28 +26,10 @@ public class Account {
      * @param type is the type of Asset.  
      */
     public static void add(String name, char type){
-        
-        try {
-            Connection cn = Database.connect();
-            Statement st = cn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM Accounts WHERE Name = '" + name + "'");
-            
-            if(!rs.next()){
-            
-                SQLoperation.close(rs,st,cn);
                 
-                SQLoperation.insert("Accounts", "'" + name + "', '" + type + "'");
-                
-            } else {
-                JOptionPane.showMessageDialog(null, "Esta cuenta ya existe.\n Intente de nuevo.");
-            }            
-            
-            SQLoperation.close(rs,st,cn);                       
-            
-        } catch (SQLException e) {
-            System.err.println("Error adding account. " + e.getMessage());
-        }
-        
+        SQLoperation.insert("Accounts", "'" + name + "', '" + type + "'");
+ 
+  
     }
 
     /**
