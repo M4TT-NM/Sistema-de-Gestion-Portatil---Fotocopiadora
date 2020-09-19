@@ -27,10 +27,28 @@ public class Main extends javax.swing.JFrame {
 
     static Checker checker = new Checker();
     static CardLayout MaincardLayout;
-    static DefaultTableModel sellsModel = new DefaultTableModel();
-    static DefaultTableModel stockModel = new DefaultTableModel();
-    static DefaultTableModel assetsModel = new DefaultTableModel();
-    
+    DefaultTableModel sellsModel = new DefaultTableModel(){
+        @Override
+        public boolean isCellEditable(int row, int column) {
+           //all cells wont be editable
+           return false;
+        };
+    };        
+    DefaultTableModel stockModel = new DefaultTableModel(){
+        @Override
+        public boolean isCellEditable(int row, int column) {
+           //all cells wont be editable
+           return false;
+        };
+    };        
+    DefaultTableModel assetsModel = new DefaultTableModel(){
+        @Override
+        public boolean isCellEditable(int row, int column) {
+           //all cells wont be editable
+           return false;
+        };
+    };
+
     
     
     /**
@@ -49,7 +67,7 @@ public class Main extends javax.swing.JFrame {
         }
         checker.setReportFolder();
         checker.setBusinessName();
-        
+        businessNameLabel.setText(checker.getBusinessName());
         //Main stuff
         category.setSelectedIndex(0);
         product.setModel(new DefaultComboBoxModel(getProducts()));
@@ -128,6 +146,7 @@ public class Main extends javax.swing.JFrame {
                         ((DefaultTableModel)AssetsTable.getModel()).removeRow(row);
                         Asset.delete(name);
                         fillAssets();
+                        worthLabel.setText("$" + Double.toString(Asset.totalWorth()));                        
                     }
                 }
                 
@@ -194,11 +213,13 @@ public class Main extends javax.swing.JFrame {
         jScrollPane4 = new javax.swing.JScrollPane();
         AssetsTable = new javax.swing.JTable();
         jLabel11 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
+        worthLabel = new javax.swing.JLabel();
         name_txt = new javax.swing.JTextField();
         value_txt = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
         account_txt = new javax.swing.JTextField();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setIconImage(getIconImage());
@@ -406,9 +427,23 @@ public class Main extends javax.swing.JFrame {
             new String [] {
                 "Concepto", "Cantidad", "Precio", "Total"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         sellsTable.setSurrendersFocusOnKeystroke(true);
         jScrollPane1.setViewportView(sellsTable);
+        if (sellsTable.getColumnModel().getColumnCount() > 0) {
+            sellsTable.getColumnModel().getColumn(0).setResizable(false);
+            sellsTable.getColumnModel().getColumn(1).setResizable(false);
+            sellsTable.getColumnModel().getColumn(2).setResizable(false);
+            sellsTable.getColumnModel().getColumn(3).setResizable(false);
+        }
 
         Home.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 160, 580, 320));
 
@@ -485,7 +520,7 @@ public class Main extends javax.swing.JFrame {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                true, false, false
+                false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -493,6 +528,11 @@ public class Main extends javax.swing.JFrame {
             }
         });
         jScrollPane3.setViewportView(StockTable);
+        if (StockTable.getColumnModel().getColumnCount() > 0) {
+            StockTable.getColumnModel().getColumn(0).setResizable(false);
+            StockTable.getColumnModel().getColumn(1).setResizable(false);
+            StockTable.getColumnModel().getColumn(2).setResizable(false);
+        }
 
         StockPanel.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 70, 580, 280));
 
@@ -592,7 +632,7 @@ public class Main extends javax.swing.JFrame {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                true, false, true
+                true, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -600,6 +640,11 @@ public class Main extends javax.swing.JFrame {
             }
         });
         jScrollPane4.setViewportView(AssetsTable);
+        if (AssetsTable.getColumnModel().getColumnCount() > 0) {
+            AssetsTable.getColumnModel().getColumn(0).setResizable(false);
+            AssetsTable.getColumnModel().getColumn(1).setResizable(false);
+            AssetsTable.getColumnModel().getColumn(2).setResizable(false);
+        }
 
         AssetsPanel.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 70, 580, 280));
 
@@ -607,13 +652,14 @@ public class Main extends javax.swing.JFrame {
         jLabel11.setForeground(new java.awt.Color(0, 0, 0));
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel11.setText("CUENTA");
-        AssetsPanel.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 370, 90, 20));
+        AssetsPanel.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 420, 90, 20));
 
-        jLabel12.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jLabel12.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel12.setText("VALOR");
-        AssetsPanel.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 370, 90, 20));
+        worthLabel.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        worthLabel.setForeground(new java.awt.Color(0, 0, 0));
+        worthLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        worthLabel.setText("$" + Double.toString(Asset.totalWorth())
+        );
+        AssetsPanel.add(worthLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 360, 90, 30));
 
         name_txt.setBackground(new java.awt.Color(255, 255, 255));
         name_txt.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
@@ -625,7 +671,7 @@ public class Main extends javax.swing.JFrame {
                 name_txtActionPerformed(evt);
             }
         });
-        AssetsPanel.add(name_txt, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 400, 170, 30));
+        AssetsPanel.add(name_txt, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 450, 170, 30));
 
         value_txt.setBackground(new java.awt.Color(255, 255, 255));
         value_txt.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
@@ -637,13 +683,13 @@ public class Main extends javax.swing.JFrame {
                 value_txtActionPerformed(evt);
             }
         });
-        AssetsPanel.add(value_txt, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 400, 90, 30));
+        AssetsPanel.add(value_txt, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 450, 90, 30));
 
         jLabel13.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel13.setForeground(new java.awt.Color(0, 0, 0));
         jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel13.setText("NOMBRE");
-        AssetsPanel.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 370, 90, 20));
+        jLabel13.setText("Valor neto de activos:");
+        AssetsPanel.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 360, 200, 30));
 
         account_txt.setBackground(new java.awt.Color(255, 255, 255));
         account_txt.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
@@ -655,7 +701,19 @@ public class Main extends javax.swing.JFrame {
                 account_txtActionPerformed(evt);
             }
         });
-        AssetsPanel.add(account_txt, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 400, 170, 30));
+        AssetsPanel.add(account_txt, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 450, 170, 30));
+
+        jLabel15.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel15.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel15.setText("NOMBRE");
+        AssetsPanel.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 420, 90, 20));
+
+        jLabel16.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel16.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel16.setText("VALOR");
+        AssetsPanel.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 420, 90, 20));
 
         Container.add(AssetsPanel, "Assets");
 
@@ -716,9 +774,10 @@ public class Main extends javax.swing.JFrame {
             try {
                 String name = productName.getText().trim();
                 double price = Double.parseDouble(productPrice.getText().trim());
-                String pCategory = (productCategory.getSelectedItem().toString().equals("Producto")) ? "P" : "S";
+                String pCategory = productCategory.getSelectedItem().toString();
                 Stock.addProduct(name, price, pCategory);
                 fillStock();
+              
                 productName.setText(""); productPrice.setText("");                 
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(null,"No ingrese letras en el campo precio.");
@@ -750,6 +809,7 @@ public class Main extends javax.swing.JFrame {
                 String account = account_txt.getText().trim();
                 Asset.add(name,account, value);
                 fillAssets();
+                worthLabel.setText("$" + Double.toString(Asset.totalWorth()));
                 name_txt.setText(""); value_txt.setText(""); account_txt.setText("");
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(null,"No ingrese letras en el campo valor.");
@@ -772,6 +832,8 @@ public class Main extends javax.swing.JFrame {
     private void homeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeButtonActionPerformed
         // TODO add your handling code here:
         MaincardLayout.show(Container, "Home");
+        category.setSelectedIndex(0);
+        product.setModel(new DefaultComboBoxModel(getProducts()));        
     }//GEN-LAST:event_homeButtonActionPerformed
 
     private void stockButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stockButtonActionPerformed
@@ -794,6 +856,7 @@ public class Main extends javax.swing.JFrame {
 
     private void sellButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sellButtonActionPerformed
         Sell.getTempSold();
+        fillSells();
     }//GEN-LAST:event_sellButtonActionPerformed
 
     private void categoryItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_categoryItemStateChanged
@@ -868,9 +931,10 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -893,6 +957,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JTable sellsTable;
     private guis.RSButtonMetro stockButton;
     private javax.swing.JTextField value_txt;
+    private javax.swing.JLabel worthLabel;
     // End of variables declaration//GEN-END:variables
 
     public Vector getProducts(){
@@ -901,7 +966,7 @@ public class Main extends javax.swing.JFrame {
         try {
             Connection cn = Database.connect();
             Statement st = cn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM Selling WHERE Category = 'P'");
+            ResultSet rs = st.executeQuery("SELECT * FROM Selling WHERE Category = 'Producto'");
             
             while(rs.next()){
                 vector.add(rs.getString("Name"));
@@ -922,7 +987,7 @@ public class Main extends javax.swing.JFrame {
         try {
             Connection cn = Database.connect();
             Statement st = cn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM Selling WHERE Category = 'S'");
+            ResultSet rs = st.executeQuery("SELECT * FROM Selling WHERE Category = 'Servicio'");
             
             while(rs.next()){
                 vector.add(rs.getString("Name"));
@@ -946,7 +1011,7 @@ public class Main extends javax.swing.JFrame {
             ResultSet rs = st.executeQuery("SELECT * FROM Assets");
             Object[] vector = new Object[3];
             while(rs.next()){
-                for(int i = 1; i < vector.length; i++){
+                for(int i = 1; i <= vector.length; i++){
                     vector[i - 1] = rs.getObject(i);
                 }
                assetsModel.addRow(vector);
@@ -971,7 +1036,7 @@ public class Main extends javax.swing.JFrame {
             ResultSet rs = st.executeQuery("SELECT * FROM Selling");
             Object[] vector = new Object[3];
             while(rs.next()){
-                for(int i = 1; i < vector.length; i++){
+                for(int i = 1; i <= vector.length; i++){
                     vector[i - 1] = rs.getObject(i);
                 }
                stockModel.addRow(vector);
@@ -993,10 +1058,10 @@ public class Main extends javax.swing.JFrame {
         try {
             Connection cn = Database.connect();
             Statement st = cn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM Temp");
+            ResultSet rs = st.executeQuery("SELECT Concept,Amount,Value,Total FROM Temp");
             Object[] vector = new Object[4];
             while(rs.next()){
-                for(int i = 1; i < vector.length; i++){
+                for(int i = 1; i <= vector.length; i++){
                     vector[i - 1] = rs.getObject(i);
                 }
                sellsModel.addRow(vector);

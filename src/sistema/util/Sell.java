@@ -111,7 +111,7 @@ public class Sell {
             System.err.println("Error getting total: " + e);
         }
         SQLoperation.truncate("Temp");
-        JOptionPane.showMessageDialog(null, "El total es: " + total);
+        JOptionPane.showMessageDialog(null, "El total es: $" + total);
     }    
     
     
@@ -252,6 +252,7 @@ public class Sell {
                 }
                 SQLoperation.close(rs, st, cn);
                 doc.close();
+                SQLoperation.truncate("Temp");
                 Sell.cleanRegisters();
                 JOptionPane.showMessageDialog(null, "Informe de ventas listo.");
                 

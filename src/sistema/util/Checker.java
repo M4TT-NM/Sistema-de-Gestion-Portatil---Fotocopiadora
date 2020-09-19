@@ -86,6 +86,7 @@ public class Checker {
                     JOptionPane.showMessageDialog(null, "Carpeta actualizada.");
                 } else {
                     JOptionPane.showMessageDialog(null, "No ha incluido la carpeta para \n los reportes.");
+                    System.exit(0);
                 }
               
             } else {
@@ -136,7 +137,12 @@ public class Checker {
             if(rs.getString("Data") == null){
                 SQLoperation.close(rs,st,cn);
                 businessName = JOptionPane.showInputDialog("Ingrese el nombre de su negocio:");
-                SQLoperation.update("PrivateData", "Data = '" + businessName + "'", "Name = 'BusinessName'");
+                if(businessName == null){
+                    System.exit(0);
+                } else {
+                    SQLoperation.update("PrivateData", "Data = '" + businessName + "'", "Name = 'BusinessName'");
+                }
+                
             } else {
                 SQLoperation.close(rs,st,cn);                
             }
