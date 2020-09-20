@@ -107,8 +107,8 @@ public class Main extends javax.swing.JFrame {
                     int confirmation = JOptionPane.showConfirmDialog(null,"¿Borrar?",null,JOptionPane.YES_NO_OPTION);
                     if(confirmation == JOptionPane.YES_OPTION){
                         ((DefaultTableModel)sellsTable.getModel()).removeRow(row);
-                        SQLoperation.delete("Temp", "Sell-Concept = '" + name + "'");
-                        SQLoperation.delete("ReportData", "Sell-Concept = '" + name + "'");
+                        SQLoperation.delete("Temp", "Concept = '" + name + "'");
+                        SQLoperation.delete("ReportData", "Concept = '" + name + "'");
                         fillSells();
                     }
                 }
