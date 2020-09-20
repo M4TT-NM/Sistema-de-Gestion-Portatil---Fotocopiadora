@@ -230,7 +230,7 @@ public class Sell {
                     
                     do {                        
                         table.addCell(rs.getString("Time"));
-                        table.addCell(rs.getString("Sell-Concept"));
+                        table.addCell(rs.getString("Concept"));
                         table.addCell(rs.getString("Amount"));
                         table.addCell("$"+ rs.getString("Value"));
                         table.addCell("$"+ rs.getString("Total"));
