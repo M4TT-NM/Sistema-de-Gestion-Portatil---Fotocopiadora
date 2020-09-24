@@ -26,6 +26,7 @@ import java.io.FileNotFoundException;
 
 import java.io.FileOutputStream;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import sistema.db.Database;
 
 
@@ -36,9 +37,7 @@ import sistema.db.Database;
  */
 public class Sell {
 
-    static LocalTime t = new LocalTime();
-    static LocalDate d = new LocalDate();
-    static Checker checker = new Checker();
+    private final static Checker CHECKER = new Checker();
     
     /**
      * This method is used to register sells in the database.
@@ -47,6 +46,7 @@ public class Sell {
      * @param value is the value of the product.
      */
     public static void register(String concept, int amount, double value){
+        LocalTime t = new LocalTime();
         int hour = t.getHourOfDay();
         String time = (hour < 12) ? "am" : "pm";        
 
@@ -80,7 +80,7 @@ public class Sell {
 
         String minute = (t.getMinuteOfHour() < 10) ? "0" + Integer.toString(t.getMinuteOfHour()) : Integer.toString(t.getMinuteOfHour());
         String second = (t.getSecondOfMinute() < 10) ? "0" + Integer.toString(t.getSecondOfMinute()) : Integer.toString(t.getSecondOfMinute());
-        double total = amount * value;
+        double total = Math.round((amount * value) * 100.0) / 100.0;
         
         if(amount > 0 && value > 0){
             SQLoperation.insert("ReportData", "'" + hour + ":" + minute + ":" + second + " " + time + "', '" + concept + "'," + amount + "," + value + "," + total);
@@ -158,7 +158,7 @@ public class Sell {
      * This method generates sells reports as pdf files.
      */
     public static void generateReport(){
-        
+        LocalDate d = new LocalDate();
         String month = null;
         switch(d.getMonthOfYear()){
             case 1: month = "ENERO";
@@ -190,7 +190,7 @@ public class Sell {
         Document doc = new Document();
         
         try {
-            String path = checker.getReportFolder() + "/";
+            String path = CHECKER.getReportFolder() + "/";
             String day = "Dia " + Integer.toString(d.getDayOfMonth()) + "-" + Integer.toString(d.getMonthOfYear()) + "-" + Integer.toString(d.getYear());
             
             PdfWriter.getInstance(doc, new FileOutputStream(path + day + ".pdf"));
@@ -204,7 +204,7 @@ public class Sell {
             title.setFont(FontFactory.getFont("Arial", 20, Font.NORMAL, BaseColor.BLACK));
             subtitle.setFont(FontFactory.getFont("Arial", 16, Font.ITALIC, BaseColor.BLACK));
             title.add("DIA " + d.getDayOfMonth() + " DE " + month + " DEL " + d.getYear());
-            subtitle.add("\n" + checker.getBusinessName());
+            subtitle.add("\n" + CHECKER.getBusinessName());
             intro.setFont(FontFactory.getFont("Arial", 14, Font.NORMAL, BaseColor.BLACK));
             intro.add("\n\n\n Lista de ventas realizadas.\n\n\n\n\n");
             
