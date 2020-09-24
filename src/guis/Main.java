@@ -57,7 +57,6 @@ public class Main extends javax.swing.JFrame {
     public Main() {
         
         setSize(800, 600);
-        setLayout(null);
         setResizable(false);
         setLocationRelativeTo(null);
         initComponents();        
@@ -77,7 +76,7 @@ public class Main extends javax.swing.JFrame {
         MaincardLayout.show(Container, "Home");
         
         //Tables stuff
-        
+        sellsModel.addColumn("Hora");
         sellsModel.addColumn("Concepto");
         sellsModel.addColumn("Cantidad");
         sellsModel.addColumn("Precio");
@@ -97,18 +96,20 @@ public class Main extends javax.swing.JFrame {
         sellsTable.setModel(sellsModel);
         StockTable.setModel(stockModel);
         AssetsTable.setModel(assetsModel);
+        
         sellsTable.addMouseListener(new MouseAdapter() {            
             @Override
             public void mouseClicked(MouseEvent e){
                 int row = sellsTable.rowAtPoint(e.getPoint());//any row can be selected.
                 
                 if(row > -1){//From row  and so on.
-                    String name = sellsTable.getValueAt(row, 0).toString();
+                    String time = sellsTable.getValueAt(row, 0).toString();
+                    String concept = sellsTable.getValueAt(row,1).toString();
                     int confirmation = JOptionPane.showConfirmDialog(null,"¿Borrar?",null,JOptionPane.YES_NO_OPTION);
                     if(confirmation == JOptionPane.YES_OPTION){
                         ((DefaultTableModel)sellsTable.getModel()).removeRow(row);
-                        SQLoperation.delete("Temp", "Concept = '" + name + "'");
-                        SQLoperation.delete("ReportData", "Concept = '" + name + "'");
+                        SQLoperation.delete("Temp", "Concept = '" + concept + "'");
+                        SQLoperation.delete("ReportData", "Time = '" + time + "'");
                         fillSells();
                     }
                 }
@@ -351,7 +352,7 @@ public class Main extends javax.swing.JFrame {
         category.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         category.setForeground(new java.awt.Color(255, 255, 255));
         category.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Producto", "Servicio" }));
-        category.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        category.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         category.setOpaque(false);
         category.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -369,7 +370,7 @@ public class Main extends javax.swing.JFrame {
         product.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         product.setForeground(new java.awt.Color(255, 255, 255));
         product.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Galletas" }));
-        product.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        product.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         product.setOpaque(false);
         product.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -419,17 +420,17 @@ public class Main extends javax.swing.JFrame {
         sellsTable.setForeground(new java.awt.Color(0, 0, 0));
         sellsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Concepto", "Cantidad", "Precio", "Total"
+                "Hora", "Concepto", "Cantidad", "Precio", "Total"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -443,6 +444,7 @@ public class Main extends javax.swing.JFrame {
             sellsTable.getColumnModel().getColumn(1).setResizable(false);
             sellsTable.getColumnModel().getColumn(2).setResizable(false);
             sellsTable.getColumnModel().getColumn(3).setResizable(false);
+            sellsTable.getColumnModel().getColumn(4).setResizable(false);
         }
 
         Home.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 160, 580, 320));
@@ -552,7 +554,7 @@ public class Main extends javax.swing.JFrame {
         productCategory.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         productCategory.setForeground(new java.awt.Color(255, 255, 255));
         productCategory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Producto", "Servicio" }));
-        productCategory.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        productCategory.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         productCategory.setOpaque(false);
         productCategory.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1058,8 +1060,8 @@ public class Main extends javax.swing.JFrame {
         try {
             Connection cn = Database.connect();
             Statement st = cn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT Concept,Amount,Value,Total FROM Temp");
-            Object[] vector = new Object[4];
+            ResultSet rs = st.executeQuery("SELECT * FROM Temp");
+            Object[] vector = new Object[5];
             while(rs.next()){
                 for(int i = 1; i <= vector.length; i++){
                     vector[i - 1] = rs.getObject(i);
